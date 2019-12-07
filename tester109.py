@@ -1,4 +1,4 @@
-# VERSION December 3, 2019
+# VERSION December 7, 2019
 
 # Ilkka Kokkarinen, ilkka.kokkarinen@gmail.com
 
@@ -1267,11 +1267,34 @@ def arithmetic_progression_generator(seed):
         yield (sorted(list(elems)), )
         if i % 10 == 0:
             m += 1
-        
-
+     
+def connected_islands_generator(seed):
+    rng = random.Random(seed)
+    for n in range(6, 100):        
+        for m in range(n // 2, n):
+            bridges = set()
+            while len(bridges) < m:            
+                s = rng.randint(0, n-1)
+                e = rng.randint(0, n-1)
+                if s != e:
+                    bridges.add((s, e))
+            bridges = list(bridges)
+            queries = []
+            while len(queries) < n:
+                s = rng.randint(0, n-1)
+                e = rng.randint(0, n-1)
+                if s != e:
+                    queries.append((s, e))
+            yield (n, bridges, queries)
+                
 # Let the good times roll!    
 
 test_all_functions(labs109, [
+        (
+        "connected_islands",
+        connected_islands_generator(seed),
+        "ceafc55f58a4f921582cf6fcd2c856851fca7444541e5024d1"                
+        ),        
         (
         "arithmetic_progression",
         arithmetic_progression_generator(seed),
