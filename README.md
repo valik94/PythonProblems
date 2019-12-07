@@ -6,6 +6,6 @@ Write the specified functions one by one into the file `labs109.py`. The automat
 
 Some of the tests use the UTF-8 text files `warandpeace.txt` and `words.txt` as data source. Editing these files in any way most likely makes it impossible for the tester to produce the correct expected checksum for the functions whose testers use that particular text file.
 
-Everyone who wishes to teach or learn Python is welcome to use and adapt these problems for their own purposes as they see fit. The lab specification document and the automated tester software `tester109.py` are released under the GNU Public License 3, with no warranties implied by the author. The rights for the text files `warandpeace.txt` and `words.txt` belong to their respective holders.
+Everyone who wishes to teach or learn Python is welcome to use and adapt these problems for their own purposes as they see fit. The lab specification document and the automated tester software `tester109.py` are released under the GNU General Public License 3, with no warranties implied by the author. The rights for the text files `warandpeace.txt` and `words.txt` belong to their respective holders.
 
 The author welcomes feedback by email at ilkka.kokkarinen@gmail.com from computer science instructors who use these problems in their courses.
