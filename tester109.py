@@ -1301,11 +1301,6 @@ test_all_functions(labs109, [
         "aaab6fcefc56db92e43609036aa5bf92707f1070cdbcd96181"
         ),
         (
-        "sublist_with_mostest",
-        sublist_with_mostest_generator(seed),
-        "e22a5381b650d5c4868dfe765139c554bae4a61998fe0f2d78"        
-        ),
-        (
         "count_overlapping_disks",
         count_overlapping_disks_generator(seed),
         "18e8f5385fdc28a755dcad2167790f1177a3f4851760aa4285"
