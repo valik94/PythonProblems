@@ -1,4 +1,4 @@
-# 109 Graded Python Problems for CCPS 109
+# 109 Python Problems for CCPS 109
 
 The problem specifications and the automated tester for the graded lab problems for the course *CCPS 109 Computer Science I*, as taught by Ilkka Kokkarinen for the Chang School of Continuing Education of Ryerson University, Toronto, Canada.
 
