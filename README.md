@@ -1,6 +1,6 @@
 # 109 Graded Python Problems for CCPS 109
 
-The problem specifications and the automated tester for the graded lab problems for the course *CCPS 109 Computer Science I*, as taught in Chang School of Continuing Education of Ryerson University, Toronto, Canada.
+The problem specifications and the automated tester for the graded lab problems for the course *CCPS 109 Computer Science I*, as taught by Ilkka Kokkarinen for the Chang School of Continuing Education of Ryerson University, Toronto, Canada.
 
 Write the specified functions one by one into the file `labs109.py`. The automated tester will test only those functions that you have implemented so far, and run the tests in the order in which your functions appear in the file.
 
