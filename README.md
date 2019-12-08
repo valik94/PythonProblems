@@ -8,8 +8,8 @@ Some of the tests use the UTF-8 text files `warandpeace.txt` and `words_alpha.tx
 
 Everyone who wishes to teach or learn Python is welcome to use and adapt these problems for their own purposes as they see fit. The lab specification document and the automated tester software `tester109.py` are released under the GNU General Public License 3, with no warranties implied by the author.
 
-Wordlist `words_alpha.txt` copied from [dwyl/english-words](https://github.com/dwyl/english-words).
+Wordlist `words_alpha.txt` taken from [dwyl/english-words](https://github.com/dwyl/english-words).
 
-Text of `warandpeace.txt` copied from [Project Gutenberg](http://www.gutenberg.org/ebooks/2600).
+Text of `warandpeace.txt` taken from [Project Gutenberg](http://www.gutenberg.org/ebooks/2600).
 
 The author welcomes feedback by email at ilkka.kokkarinen@gmail.com from computer science instructors who use these problems in their courses.
