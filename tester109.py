@@ -1,4 +1,7 @@
-# VERSION December 7, 2019
+# Automated tester for the problems in the collection
+# "109 Python Problems for CCPS 109" by Ilkka Kokkarinen.
+
+# VERSION December 8, 2019
 
 # Ilkka Kokkarinen, ilkka.kokkarinen@gmail.com
 
@@ -304,14 +307,14 @@ def __limited_alphabet(words, chars):
     return result
 
 def sort_by_typing_handedness_generator():
-    f = open('words.txt', 'r', encoding='utf-8')
+    f = open('words_alpha.txt', 'r', encoding='utf-8')
     words = [x.strip() for x in f if x.islower()]
     f.close()
     words = __limited_alphabet(words, "abcdefghijklmnopqrstuvwxyz")
     yield [words]
 
 def possible_words_generator(seed):
-    f = open('words.txt', 'r', encoding='utf-8')
+    f = open('words_alpha.txt', 'r', encoding='utf-8')
     words = [x.strip() for x in f if x.islower()]
     f.close()
     rng = random.Random(seed)
@@ -360,7 +363,7 @@ def __create_random_word(n, rng):
 
 def scrabble_value_generator(seed):
     rng = random.Random(seed)
-    f = open('words.txt', 'r', encoding='utf-8')
+    f = open('words_alpha.txt', 'r', encoding='utf-8')
     words = [x.strip() for x in f if x.islower()]
     f.close()
     words = __limited_alphabet(words, "abcdefghijklmnopqrstuvwxyz")
@@ -479,7 +482,7 @@ def fibonacci_word_generator(seed):
         curr = curr * 2
 
 def all_cyclic_shifts_generator():
-    f = open('words.txt', 'r', encoding='utf-8')
+    f = open('words_alpha.txt', 'r', encoding='utf-8')
     words = [x.strip() for x in f if x.islower()]
     f.close()
     words = __limited_alphabet(words, "abcdefghijklmnopqrstuvwxyz")
@@ -648,7 +651,7 @@ def riffle_generator(seed):
 
 def words_with_given_shape_generator(seed):
     rng = random.Random(seed)
-    f = open('words.txt', 'r', encoding='utf-8')
+    f = open('words_alpha.txt', 'r', encoding='utf-8')
     words = [x.strip() for x in f if x.islower()]
     f.close()
     for i in range(100):
@@ -679,7 +682,7 @@ def only_odd_digits_generator(seed):
 
 def pancake_scramble_generator(seed):
     rng = random.Random(seed)
-    f = open('words.txt', 'r', encoding='utf-8')
+    f = open('words_alpha.txt', 'r', encoding='utf-8')
     words = [x.strip() for x in f if x.islower()]
     f.close()
     for i in range(10000):
@@ -854,7 +857,7 @@ def __key_dist():
     return dist
 
 def autocorrect_word_generator(seed):
-    f = open('words.txt', 'r', encoding='utf-8')
+    f = open('words_alpha.txt', 'r', encoding='utf-8')
     words = [x.strip() for x in f if x.islower()]
     f.close()
     dist = __key_dist()
@@ -892,7 +895,7 @@ def is_cyclops_generator(seed):
 
 def words_with_letters_generator(seed):
     rng = random.Random(seed)
-    f = open('words.txt', 'r', encoding='utf-8')
+    f = open('words_alpha.txt', 'r', encoding='utf-8')
     words = [x.strip() for x in f if x.islower()]
     f.close()
     count = 0
@@ -1061,7 +1064,7 @@ def suppressed_digit_sum_generator(seed):
         
 def unscramble_generator(seed):
     rng = random.Random(seed)
-    f = open('words.txt', 'r', encoding='utf-8')
+    f = open('words_alpha.txt', 'r', encoding='utf-8')
     words = [x.strip() for x in f if x.islower()]
     f.close()
     words = __limited_alphabet(words, "abcdefghijklmnopqrstuvwxyz")
@@ -1100,7 +1103,7 @@ ups = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 def substitution_words_generator(seed):
     rng = random.Random(seed)
-    f = open('words.txt', 'r', encoding='utf-8')
+    f = open('words_alpha.txt', 'r', encoding='utf-8')
     words = [x.strip() for x in f if x.islower()]
     f.close()
     words = __limited_alphabet(words, "abcdefghijklmnopqrstuvwxyz")
@@ -1286,7 +1289,7 @@ def connected_islands_generator(seed):
                 if s != e:
                     queries.append((s, e))
             yield (n, bridges, queries)
-                
+       
 # Let the good times roll!    
 
 test_all_functions(labs109, [
@@ -1358,7 +1361,7 @@ test_all_functions(labs109, [
         (
         "substitution_words",
         substitution_words_generator(seed),
-        "6697ce3720a1e92cc16c44c40ce410814799e6f2cf92edc938"
+        "c0232c6ef38065ccafe632f8e5d2d3d36297b56c7c329ac028"
         ),        
         (
         "taxi_zum_zum",
@@ -1378,7 +1381,7 @@ test_all_functions(labs109, [
         (
         "unscramble",
         unscramble_generator(seed),
-        "bf1931e94723afba8c2a12b272db8baffb315738ab74f8fb40"
+        "d687545c5f459e2a3ccad4442304a1a64b1878b990916ceba7"
         ),        
         (
         "suppressed_digit_sum",
@@ -1438,7 +1441,7 @@ test_all_functions(labs109, [
         (
         "words_with_letters",
         words_with_letters_generator(seed),
-        "7ab7e0719a76c294e134e3368bd960e1a55cdbbcd86c6dd521"
+        "fb1f341f18ace24d22ac5bd704392163d03c5ba2388d9b1ae3"
         ),
         (
         "count_distinct_lines",
@@ -1478,7 +1481,7 @@ test_all_functions(labs109, [
         (
         "autocorrect_word",
         autocorrect_word_generator(seed),
-        "8f13d62e87966e08f69a8168160a0983f953e8642b33e62e62"
+        "4690c10ea523bc6052265949555bb18a6ee52fa279f7ed785b"
         ),        
         (
         "remove_after_kth",
@@ -1503,7 +1506,7 @@ test_all_functions(labs109, [
         (
         "scrabble_value",        
         scrabble_value_generator(seed),
-        "ca198e6be5d20b582362023cfe45e96dd284f9d62255b43252"
+        "9d81f4a3461c35d4606477baf8fbf0d8c23cf37f8decaa8ab3"
         ),        
         (
         "reverse_vowels",
@@ -1568,7 +1571,7 @@ test_all_functions(labs109, [
         (
         "pancake_scramble",
         pancake_scramble_generator(seed),
-        "8607c6788da44d5926a4dd2afa2d8baf4db12446fa831e6b69"
+        "19dfab79ae9bb4b04b8d65462153e78f7f154023162703a83f"
         ),        
         (
         "only_odd_digits",                
@@ -1623,7 +1626,7 @@ test_all_functions(labs109, [
         (
         "words_with_given_shape",                
         words_with_given_shape_generator(seed),
-        "e2897f0ed6addd2a1b9fbf8b3f27e56ab4e5949726ad6cf80f"
+        "bf6c0783d818386d8456291925110a016870a1a950755d8e0c"
         ),        
         (
         "prime_factors",
@@ -1718,7 +1721,7 @@ test_all_functions(labs109, [
         (
         "all_cyclic_shifts",
         all_cyclic_shifts_generator(),
-        "0890c1b6077f0ec28642ab7723ba49e6453f0d7251a25e9e5a"
+        "035f7589b48abd2815bee73164810853aef19fd1d74007902c"
         ),               
         (
         "fibonacci_word",
@@ -1828,11 +1831,11 @@ test_all_functions(labs109, [
         (
         "sort_by_typing_handedness",
         sort_by_typing_handedness_generator(),
-        "c093675bb9814e5a2a761c829e8fb5b3a714e93ea2031fd1c3"
+        "919973a60cc556525aa38082a607f9981e83e5a58944d084af"
         ),              
         (
         "possible_words",
         possible_words_generator(999),                
-        "55e494a37554d8f8b2c98bd7451de2b05728aa66be210478cd"
+        "44d9517392e010fa21cbd3a45189ab5f89b570d1434dce599b"
         ),   
 ])
