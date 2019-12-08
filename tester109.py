@@ -298,19 +298,10 @@ def milton_work_point_count_generator(seed):
         hand = rng.sample(deck, 13)
         yield (hand, st)
 
-def __limited_alphabet(words, chars):
-    pat = re.compile('^[' + chars + ']+$')
-    result = []
-    for word in words:
-        if pat.match(word):
-            result.append(word)
-    return result
-
 def sort_by_typing_handedness_generator():
     f = open('words_alpha.txt', 'r', encoding='utf-8')
     words = [x.strip() for x in f if x.islower()]
     f.close()
-    words = __limited_alphabet(words, "abcdefghijklmnopqrstuvwxyz")
     yield [words]
 
 def possible_words_generator(seed):
@@ -365,8 +356,7 @@ def scrabble_value_generator(seed):
     rng = random.Random(seed)
     f = open('words_alpha.txt', 'r', encoding='utf-8')
     words = [x.strip() for x in f if x.islower()]
-    f.close()
-    words = __limited_alphabet(words, "abcdefghijklmnopqrstuvwxyz")
+    f.close()    
     for word in words:
         multipliers = [rng.randint(1, 3) for i in range(len(word))]
         yield (word, multipliers if rng.randint(0, 99) < 50 else None)
@@ -485,7 +475,6 @@ def all_cyclic_shifts_generator():
     f = open('words_alpha.txt', 'r', encoding='utf-8')
     words = [x.strip() for x in f if x.islower()]
     f.close()
-    words = __limited_alphabet(words, "abcdefghijklmnopqrstuvwxyz")
     for word in words:
         yield (word,)
 
@@ -1067,7 +1056,6 @@ def unscramble_generator(seed):
     f = open('words_alpha.txt', 'r', encoding='utf-8')
     words = [x.strip() for x in f if x.islower()]
     f.close()
-    words = __limited_alphabet(words, "abcdefghijklmnopqrstuvwxyz")
     count = 0
     while count < 500:
         w = rng.choice(words)
@@ -1106,7 +1094,6 @@ def substitution_words_generator(seed):
     f = open('words_alpha.txt', 'r', encoding='utf-8')
     words = [x.strip() for x in f if x.islower()]
     f.close()
-    words = __limited_alphabet(words, "abcdefghijklmnopqrstuvwxyz")
     yield ('ABCD', words)
     for i in range(100):
         pat = ''        
