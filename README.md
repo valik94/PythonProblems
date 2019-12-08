@@ -4,7 +4,7 @@ The problem specifications and the automated tester for the graded lab problems 
 
 Write the specified functions one by one into the file `labs109.py`. The automated tester `tester109.py` will test only those functions that you have implemented so far, and run the tests in the order in which your functions appear in the file.
 
-Some of the tests use two UTF-8 encoded text files `warandpeace.txt` and `words_alpha.txt` as data sources. Editing these files in any way most likely makes it impossible for the tester to produce the correct expected checksum for the functions whose testers use that particular text file.
+Some of the automated tests use two text files `warandpeace.txt` and `words_alpha.txt` as data sources. Editing these files in any way will most likely make it impossible for the tester to produce the correct expected checksum for the functions whose testers use that particular text file.
 
 Everyone who wishes to teach or learn Python is welcome to use and adapt these problems for their own purposes as they see fit. The author welcomes feedback by email at ilkka.kokkarinen@gmail.com from computer science instructors who use these problems in their courses.
 
