@@ -1,7 +1,7 @@
 # Automated tester for the problems in the collection
 # "109 Python Problems for CCPS 109" by Ilkka Kokkarinen.
 
-# VERSION December 8, 2019
+# VERSION January 7, 2020
 
 # Ilkka Kokkarinen, ilkka.kokkarinen@gmail.com
 
@@ -11,11 +11,16 @@ from time import time
 import labs109
 import itertools 
 import random
-import re
+import gzip
 
 # Fixed seed used to generate random numbers.
-
 seed = 12345
+
+# How many test cases to record in the file for each function.
+cutoff = 300
+
+# Name of the file that contains the expected correct answers.
+recordfile = "record.zip"
 
 # Convert dictionary or set result to a list sorted by keys to
 # guarantee that results are the same in all environments.
@@ -63,12 +68,18 @@ def discrepancy(f1, f2, testcases):
 # Runs the function f for its test cases, calculating SHA256 checksum
 # of the results. If the checksum matches the expected, return the
 # running time, otherwise return -1. If expected == None, print out
-# the computed checksum instead.
+# the computed checksum instead. If recorder != None, print out the
+# arguments and expected result into the recorder.
 
-def test_one_function(f, testcases, expected = None):
-    print(f"{f.__name__}: ", end="", flush = True)
-    chk, starttime, crashed = sha256(), time(), False
-    for test in testcases:
+def test_one_function(f, testcases, expected = None, recorder = None, known = None):
+    fname = f.__name__
+    print(f"{fname}: ", end="", flush = True)
+    if recorder:
+        print(f"****{fname}", file = recorder)
+    if known:
+        recorded = known[fname]
+    chk, starttime, crashed = sha256(), time(), False    
+    for (count, test) in enumerate(testcases):
         try:
             result = f(*test)
         except Exception as e: # catch any exception
@@ -78,20 +89,36 @@ def test_one_function(f, testcases, expected = None):
         # If the result is a set or dictionary, turn it into sorted list first.
         result = canonize(result)
         # Update the checksum.
-        chk.update(str(result).encode('utf-8'))
-    totaltime = time() - starttime
-    digest = chk.hexdigest()
-    if not crashed and not expected:
-        print(digest[:50])
-        return totaltime
-    elif not crashed and digest[:len(expected)] == expected:
-        print(f"Success in {totaltime:.3f} seconds.")
-        return totaltime
-    elif crashed:
-        return -1
+        sr = str(result)
+        chk.update(sr.encode('utf-8'))
+        if recorder:
+            print(sr.strip()[:300], file = recorder)            
+            if count >= cutoff:
+                break
+        if known and count < cutoff:
+            if not sr.strip().startswith(recorded[count]):
+                crashed = True
+                print(f"DISCREPANCY AT TEST CASE #{count}.")
+                print(f"TEST CASE: {repr(test)})")
+                print(f"EXPECTED: <{recorded[count]}>")
+                print(f"RETURNED: <{sr}>")
+                break
+    if not recorder:
+        totaltime = time() - starttime
+        digest = chk.hexdigest()
+        if not crashed and not expected:
+            print(digest[:50])
+            return totaltime
+        elif not crashed and digest[:len(expected)] == expected:
+            print(f"Success in {totaltime:.3f} seconds.")
+            return totaltime
+        elif crashed:
+            return -1
+        else:
+            print("Failed the test with checksum mismatch.".upper())
+            return -1
     else:
-        print("Failed the test with checksum mismatch.".upper())
-        return -1
+        return 0
 
 # Sort the suite of test cases according to the order in which 
 # they appear in the student source code.
@@ -110,7 +137,13 @@ def sort_by_source(suite):
 # Runs the tests for all functions in the suite, returning the
 # count of how many of those were implemented and passed the test.
 
-def test_all_functions(module, suite):
+def test_all_functions(module, suite, recorder = None, known = None):
+    if recorder:
+        print("RECORDING THE RESULTS OF THE IMPLEMENTED FUNCTIONS.")
+        print("IF YOU ARE A STUDENT, YOU SHOULD NOT BE SEEING THIS")
+        print("MESSAGE! MAKE SURE THAT THE FILE record.zip FROM THE")
+        print("PLACE WHERE YOU DOWNLOADED THIS AUTOMATED TESTER IS")
+        print("PROPERLY DOWNLOADED INTO THIS WORKING DIRECTORY!")
     count, total = 0, 0    
     for (fname, testcases, expected) in sort_by_source(suite):
         try:
@@ -118,10 +151,13 @@ def test_all_functions(module, suite):
         except KeyError:
             continue
         total += 1
-        result = test_one_function(f, testcases, expected)
+        result = test_one_function(f, testcases, expected, recorder, known)
         if result >= 0:
             count += 1
-    print(f"{count} out of {total} functions (of {len(suite)} possible) work.")
+    if recorder:
+        print(f"\nRecording complete.")
+    else:
+        print(f"{count} out of {total} functions (of {len(suite)} possible) work.")
     return count
 
 # The test case generators for the individual functions.
@@ -300,13 +336,13 @@ def milton_work_point_count_generator(seed):
 
 def sort_by_typing_handedness_generator():
     f = open('words_alpha.txt', 'r', encoding='utf-8')
-    words = [x.strip() for x in f if x.islower()]
+    words = [x.strip() for x in f]
     f.close()
     yield [words]
 
 def possible_words_generator(seed):
     f = open('words_alpha.txt', 'r', encoding='utf-8')
-    words = [x.strip() for x in f if x.islower()]
+    words = [x.strip() for x in f]
     f.close()
     rng = random.Random(seed)
     for i in range(100):
@@ -355,7 +391,7 @@ def __create_random_word(n, rng):
 def scrabble_value_generator(seed):
     rng = random.Random(seed)
     f = open('words_alpha.txt', 'r', encoding='utf-8')
-    words = [x.strip() for x in f if x.islower()]
+    words = [x.strip() for x in f]
     f.close()    
     for word in words:
         multipliers = [rng.randint(1, 3) for i in range(len(word))]
@@ -397,7 +433,7 @@ def collapse_intervals_generator(seed):
 
 def recaman_generator():
     yield (1000000,)
-
+    
 def __no_repeated_digits(n, allowed):
     n = str(n)
     for i in range(4):
@@ -473,7 +509,7 @@ def fibonacci_word_generator(seed):
 
 def all_cyclic_shifts_generator():
     f = open('words_alpha.txt', 'r', encoding='utf-8')
-    words = [x.strip() for x in f if x.islower()]
+    words = [x.strip() for x in f]
     f.close()
     for word in words:
         yield (word,)
@@ -641,7 +677,7 @@ def riffle_generator(seed):
 def words_with_given_shape_generator(seed):
     rng = random.Random(seed)
     f = open('words_alpha.txt', 'r', encoding='utf-8')
-    words = [x.strip() for x in f if x.islower()]
+    words = [x.strip() for x in f]
     f.close()
     for i in range(100):
         n = rng.randint(5, 10)
@@ -672,7 +708,7 @@ def only_odd_digits_generator(seed):
 def pancake_scramble_generator(seed):
     rng = random.Random(seed)
     f = open('words_alpha.txt', 'r', encoding='utf-8')
-    words = [x.strip() for x in f if x.islower()]
+    words = [x.strip() for x in f]
     f.close()
     for i in range(10000):
         word = rng.choice(words)
@@ -847,7 +883,7 @@ def __key_dist():
 
 def autocorrect_word_generator(seed):
     f = open('words_alpha.txt', 'r', encoding='utf-8')
-    words = [x.strip() for x in f if x.islower()]
+    words = [x.strip() for x in f]
     f.close()
     dist = __key_dist()
     df = lambda c1, c2: dist[(c1, c2)] 
@@ -885,7 +921,7 @@ def is_cyclops_generator(seed):
 def words_with_letters_generator(seed):
     rng = random.Random(seed)
     f = open('words_alpha.txt', 'r', encoding='utf-8')
-    words = [x.strip() for x in f if x.islower()]
+    words = [x.strip() for x in f]
     f.close()
     count = 0
     while count < 30:
@@ -1054,7 +1090,7 @@ def suppressed_digit_sum_generator(seed):
 def unscramble_generator(seed):
     rng = random.Random(seed)
     f = open('words_alpha.txt', 'r', encoding='utf-8')
-    words = [x.strip() for x in f if x.islower()]
+    words = [x.strip() for x in f]
     f.close()
     count = 0
     while count < 500:
@@ -1092,7 +1128,7 @@ ups = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 def substitution_words_generator(seed):
     rng = random.Random(seed)
     f = open('words_alpha.txt', 'r', encoding='utf-8')
-    words = [x.strip() for x in f if x.islower()]
+    words = [x.strip() for x in f]
     f.close()
     yield ('ABCD', words)
     for i in range(100):
@@ -1276,10 +1312,10 @@ def connected_islands_generator(seed):
                 if s != e:
                     queries.append((s, e))
             yield (n, bridges, queries)
-       
-# Let the good times roll!    
-
-test_all_functions(labs109, [
+      
+# List of test cases for the 109 functions defined.
+            
+testcases = [
         (
         "connected_islands",
         connected_islands_generator(seed),
@@ -1825,4 +1861,21 @@ test_all_functions(labs109, [
         possible_words_generator(999),                
         "44d9517392e010fa21cbd3a45189ab5f89b570d1434dce599b"
         ),   
-])
+]
+
+import os.path
+
+if os.path.exists(recordfile):
+    known, curr = dict(), ''
+    with gzip.open(recordfile, 'rt') as rf:
+        for line in rf:
+            line = line.strip()
+            if line.startswith('****'):
+                curr = line[4:]
+                known[curr] = []
+            else:
+                known[curr].append(line)    
+    test_all_functions(labs109, testcases, known = known)
+else:
+    with gzip.open(recordfile, 'wt') as rf:
+        test_all_functions(labs109, testcases, recorder = rf)
