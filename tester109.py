@@ -1,7 +1,7 @@
 # Automated tester for the problems in the collection
 # "109 Python Problems for CCPS 109" by Ilkka Kokkarinen.
 
-# VERSION January 7, 2020
+# VERSION February 11, 2020
 
 # Ilkka Kokkarinen, ilkka.kokkarinen@gmail.com
 
@@ -196,8 +196,9 @@ def rooks_with_friends_generator(seed):
             if (px, py) not in pieces:
                 pieces.append((px, py))
         fn = rng.randint(0, n)
+        pieces2 = pieces[:]
         yield (n, pieces[:fn], pieces[fn:])
-        yield (n, pieces[fn:], pieces[:fn])
+        yield (n, pieces2[fn:], pieces2[:fn])
 
 def double_until_all_digits_generator():
     for i in range(3000):
@@ -209,7 +210,7 @@ def first_preceded_by_smaller_generator(seed):
         len_ = rng.randint(1, 100)
         items = [rng.randint(0, 10000) for j in range(len_)]
         for k in range(1, len_ + 3):
-            yield (items, k)
+            yield (items[:], k)
 
 def maximum_difference_sublist_generator(seed):
     rng = random.Random(seed)
@@ -217,16 +218,16 @@ def maximum_difference_sublist_generator(seed):
         len_ = rng.randint(1, 100)
         items = [rng.randint(0, 10000) for j in range(len_)]
         for k in range(1, len_ + 1):
-            yield (items, k)
+            yield (items[:], k)
 
 def count_and_say_generator(seed):
     rng = random.Random(seed)
     for i in range(10000):
         bursts = rng.randint(1, 50)
-        digits = ""
+        digits = ''
         for i in range(bursts):
             len_ = rng.randint(1, 20)
-            digits += rng.choice("0123456789") * len_
+            digits += rng.choice('0123456789') * len_
         yield (digits,)
 
 def disemvowel_generator():
@@ -252,7 +253,7 @@ def longest_palindrome_generator(seed):
     rng = random.Random(seed)
     for i in range(1000):
         m = rng.randint(5, 50)
-        text = ""
+        text = ''
         for j in range(m):
             text += rng.choice(['a','b','c','d'])
         yield (text, )
@@ -319,7 +320,7 @@ def winning_card_generator(seed):
     for i in range(10000):
         hand = rng.sample(deck, 4)
         for trump in ["spades", "hearts", "diamonds", "clubs", None]:            
-            yield (hand, trump)
+            yield (hand[:], trump)
 
 def hand_shape_distribution_generator(seed):
     rng = random.Random(seed)
@@ -347,7 +348,7 @@ def possible_words_generator(seed):
     rng = random.Random(seed)
     for i in range(100):
         patword = rng.choice(words)
-        pat = ""
+        pat = ''
         for ch in patword:
             if rng.randint(0, 99) < 60:
                 pat += '*'
@@ -383,7 +384,7 @@ def reverse_reversed_generator(seed):
         yield (items, )      
 
 def __create_random_word(n, rng):
-    result = ""
+    result = ''
     for i in range(n):
         result += chr(ord('a') + rng.randint(0, 25))
     return result
@@ -401,19 +402,19 @@ def expand_intervals_generator(seed):
     rng = random.Random(seed)
     for j in range(1000):
         curr = 0
-        result = ""
+        result = ''
         first = True
         n = rng.randint(1, 20)
         for i in range(n):
             if not first:
-                result += ","
+                result += ','
             first = False
             if rng.randint(0, 99) < 20:
                 result += str(curr)
                 curr += rng.randint(1, 10)
             else:
                 end = curr + rng.randint(1, 30)
-                result += str(curr) + "-" + str(end)
+                result += str(curr) + '-' + str(end)
                 curr = end + rng.randint(1, 10)
         yield (result,)
 
@@ -449,7 +450,7 @@ def bulls_and_cows_generator(seed):
     for i in range(100):
         result = []
         n = rng.randint(1, 4)
-        allowed = rng.sample("123456789", 6)
+        allowed = rng.sample('123456789', 6)
         while len(result) < n:
             guess = rng.randint(1000, 9999)
             if __no_repeated_digits(guess, allowed):
@@ -563,6 +564,7 @@ def detab_generator(seed):
     wap.close()
     rng = random.Random(seed)
     for line in text:
+        line = line.replace(' ', '\t')
         n = rng.randint(1, 7)
         yield (line, n, ' ')
 
@@ -635,9 +637,7 @@ def losing_trick_count_generator(seed):
 
 def prime_factors_generator(seed):
     rng = random.Random(seed)
-    curr = 2
-    step = 1
-    goal = 10
+    curr, step, goal = 2, 1, 10
     for i in range(10000):
         yield (curr,)
         curr += step * rng.randint(1, 3)
@@ -655,23 +655,19 @@ def prime_factors_generator2(seed):
             curr += rng.randint(1, 10)
         curr += rng.randint(curr // 5, curr // 2)
 
-def factoring_factorial_generator():
-    for k in range(2, 1000):
-        yield (k,)
-
-def minimum_seeding_generator(seed):
+def factoring_factorial_generator(seed):
     rng = random.Random(seed)
-    for i in range(1, 1000):
-        up= (i+2)**3
-        prio = [rng.randint(1, up) for j in range(i)]
-        yield (prio,)
+    curr = 1
+    for k in range(2, 1000):
+        yield (curr,)
+        curr += rng.randint(1, 20)
 
 def riffle_generator(seed):
     rng = random.Random(seed)
     for i in range(1000):
         n = rng.randint(0, 100)
         items = [rng.randint(0, 10**6) for j in range(2 * n)]
-        yield (items, True)
+        yield (items[:], True)
         yield (items, False)
 
 def words_with_given_shape_generator(seed):
@@ -781,7 +777,7 @@ def is_permutation_generator(seed):
                 items[j] = items[k]
             else:
                 items[j] = n + 1
-            yield (items, n)
+            yield (items[:], n)
             items[j] = v
  
 def three_summers_generator(seed):
@@ -793,7 +789,7 @@ def three_summers_generator(seed):
         for i in range(1, n):
             items[i] = items[i-1] + rng.randint(1, 20)        
         for goal in range(1, sum(items)):
-            yield (items, goal)
+            yield (items[:], goal)
 
 def first_missing_positive_generator(seed):
     rng = random.Random(seed)
@@ -820,7 +816,7 @@ def ztalloc_generator(seed):
             len_ = rng.randint(1, 100)
             pat = [('u' if (rng.randint(0, 99) < 50) else 'd') for j in range(len_)]
             pat.extend(['d', 'd', 'd', 'd'])
-        yield ("".join(pat), )
+        yield (''.join(pat), )
 
 def sum_of_two_squares_generator(seed):
     rng = random.Random(seed)
@@ -866,7 +862,7 @@ def remove_after_kth_generator(seed):
             items.extend([n] * m)
         rng.shuffle(items)
         for k in range(1, 20):
-            yield(items, k)
+            yield(items[:], k)
 
 def __key_dist():
     top = { c:(0,i) for (i, c) in enumerate("qwertyuiop") }
@@ -930,7 +926,7 @@ def words_with_letters_generator(seed):
             n = len(word) - 3
             pos = rng.sample(range(len(word)), n)
             pos.sort()
-            letters = "".join([word[i] for i in pos])
+            letters = ''.join([word[i] for i in pos])
             yield (words, letters)
             count += 1
 
@@ -985,7 +981,7 @@ def taxi_zum_zum_generator(seed):
         moves = []
         for j in range(i + 1):
             moves.append(rng.choice(poss))
-        yield ("".join(moves),)
+        yield (''.join(moves),)
 
 def count_growlers_generator(seed):
     rng = random.Random(seed)
@@ -1007,7 +1003,7 @@ def minimize_sum_generator(seed):
     rng = random.Random(seed)
     for i in range(1000):
         n = 1 + i % 20
-        s = ""
+        s = ''
         for i in range(n):
             s += rng.choice("0123456789")
         for k in range(1, n + 1):
@@ -1054,7 +1050,7 @@ def double_trouble_generator(seed):
     rng = random.Random(seed)
     curr, step = 1, 1
     for i in range(1000):
-        yield (items, curr)
+        yield (items[:], curr)
         curr += rng.randint(1, step)
         step = step * 2
 
@@ -1064,7 +1060,7 @@ def domino_cycle_generator(seed):
         tiles = []
         cycle = rng.randint(0, 99) < 50
         for j in range(10):
-            yield (tiles,)
+            yield (tiles[:],)
             if cycle or rng.randint(0, 99) < 90:
                 if len(tiles) > 0:
                     a = tiles[-1][-1]
@@ -1277,7 +1273,7 @@ def sublist_with_mostest_generator(seed):
             if j % 5 == 0:
                 step += rng.randint(1, 5)
         for k in range(9, n // 2):
-            yield (items, k)
+            yield (items[:], k)
 
 def arithmetic_progression_generator(seed):
     rng = random.Random(seed)
@@ -1312,9 +1308,17 @@ def connected_islands_generator(seed):
                 if s != e:
                     queries.append((s, e))
             yield (n, bridges, queries)
-      
-# List of test cases for the 109 functions defined.
             
+
+#discrepancy(labs109.reverse_ascending_sublists,
+#            reverse_ascending_sublists,
+#            reverse_ascending_sublists_generator(seed))
+
+
+      
+# List of test cases for the 109 functions defined.        
+  
+          
 testcases = [
         (
         "connected_islands",
@@ -1663,8 +1667,8 @@ testcases = [
         ),  
         (
         "factoring_factorial",
-        factoring_factorial_generator(),
-        "8abfb5fa6f53476c1b91d60c48045d6a2030a1a27bd63f8884"
+        factoring_factorial_generator(seed),
+        "5c39dc014ff6afe099e058e996d57112d16d8c86b56f07ba06"
         ),        
         (
         "bridge_hand_shorthand",
@@ -1704,7 +1708,7 @@ testcases = [
         (
         "detab",
         detab_generator(seed),
-        "d3e7eea790490fd172a01cdf48639aad2462d7f440fe68cba4"
+        "ad9702548c38c925511d0eae52edfc2f5357163c65633b10e4"
         ),
         (
         "running_median_of_three",
