@@ -1,7 +1,7 @@
 # Automated tester for the problems in the collection
 # "109 Python Problems for CCPS 109" by Ilkka Kokkarinen.
 
-# VERSION February 11, 2020
+# VERSION March 2, 2020
 
 # Ilkka Kokkarinen, ilkka.kokkarinen@gmail.com
 
@@ -77,7 +77,7 @@ def test_one_function(f, testcases, expected = None, recorder = None, known = No
     if recorder:
         print(f"****{fname}", file = recorder)
     if known:
-        recorded = known[fname]
+        recorded = known.get(fname, None)
     chk, starttime, crashed = sha256(), time(), False    
     for (count, test) in enumerate(testcases):
         try:
@@ -96,7 +96,7 @@ def test_one_function(f, testcases, expected = None, recorder = None, known = No
             if count >= cutoff:
                 break
         if known and count < cutoff:
-            if not sr.strip().startswith(recorded[count]):
+            if recorded and not sr.strip().startswith(recorded[count]):
                 crashed = True
                 print(f"DISCREPANCY AT TEST CASE #{count}.")
                 print(f"TEST CASE: {repr(test)})")
@@ -1154,7 +1154,7 @@ def count_dominators_generator(seed):
     items = []
     top = 10000
     for i in range(top):
-        yield (items,)
+        yield (items[:],)
         items.append(rng.randint(1, 10 * (top - i)))
 
 def optimal_crag_score_generator(seed):
@@ -1207,7 +1207,7 @@ def fractran_generator(seed):
               (95, 23), (77, 19), (1, 17), (11, 13), (13, 11), (15, 2),
               (1, 7), (55, 1)]
     for n in range(2, 100):
-        yield(n, conway, 100)
+        yield(n, conway[:], 100)
     for i in range(10):
         for j in range(10):
             prog = []
@@ -1308,18 +1308,109 @@ def connected_islands_generator(seed):
                 if s != e:
                     queries.append((s, e))
             yield (n, bridges, queries)
-            
 
-#discrepancy(labs109.reverse_ascending_sublists,
-#            reverse_ascending_sublists,
-#            reverse_ascending_sublists_generator(seed))
+def cookie_generator(seed):
+    rng = random.Random(seed)
+    for i in range(30):
+        items = [rng.randint(1, 50)]
+        for j in range(3 + i % 7):
+            items.append(items[-1] + rng.randint(1, 50))
+        yield (items,)
 
+def eliminate_neighbours_generator(seed):
+    rng = random.Random(seed)
+    items = []
+    for i in range(1, 3000):
+        items.append(i)
+        rng.shuffle(items)
+        yield (items[:], )
+        
+def counting_series_generator(seed):
+    rng = random.Random(seed)
+    curr, step = 0, 2
+    for i in range(1000):
+        yield (curr,)
+        curr += rng.randint(1, step)
+        step = step * 2
+
+def __zigzag(rng, len_, prob):
+    curr = rng.randint(1, 8)
+    d = rng.choice([+1, -1])            
+    for k in range(len_):
+        last = curr % 10
+        dd = d if rng.randint(1, 100) < prob else -d
+        if dd == +1 and last > 0:
+            n = rng.randint(0, last - 1)
+        elif dd == -1 and last < 9:
+            n = rng.randint(last + 1, 9)
+        else:
+            n = rng.randint(0, 9)
+        curr = curr * 10 + n
+        d = -d
+    return curr
+
+def is_zigzag_generator(seed):
+    rng = random.Random(seed)
+    for i in range(100):
+        for j in range(20):
+            curr = __zigzag(rng, j, 10)
+            yield (curr, )
+
+def next_zigzag_generator(seed):
+    rng = random.Random(seed)
+    for k in range(100):
+        for i in range(100):        
+            curr = rng.randint(1, 8)
+            d = rng.choice([+1, -1])
+            last = 0
+            for j in range(i):
+                last = curr % 10
+                if d == -1:
+                    n = rng.randint(last + 1, 9)
+                else:
+                    n = rng.randint(0, last - 1)
+                curr = 10 * curr + n
+                d = -d
+            if d == -1 and last < 8:
+                n = rng.randint(1, 10)
+                curr = int(str(curr) + ("98" * n))
+            elif d == +1 and last == 9:
+                n = rng.randint(1, 10)
+                curr = int(str(curr) + ("89" * n))
+            #assert labs109.is_zigzag(curr)
+            yield (curr,)
+
+
+__primes = [2, 3, 5, 7, 11, 13]
+def md_generator(seed):
+    rng = random.Random(seed)
+    for i in range(1000):
+        (a, b) = rng.sample(__primes, 2)
+        yield (a, b, i + 2)
+        b = rng.randint(1, 10) * 2 + 1
+        yield (2, b, i + 2)
+
+
+def wythoff_array_generator(seed):
+    rng = random.Random(seed)
+    curr, step = 1, 1
+    for i in range(300):
+        yield (curr, )
+        curr += rng.randint(1, step)
+        step += 1
+
+#discrepancy(labs109.domino_cycle,
+#            domino_cycle,
+#            domino_cycle_generator(seed))
 
       
 # List of test cases for the 109 functions defined.        
   
           
 testcases = [
+        
+        # The original 109 problems.
+        
         (
         "connected_islands",
         connected_islands_generator(seed),
@@ -1864,7 +1955,46 @@ testcases = [
         "possible_words",
         possible_words_generator(999),                
         "44d9517392e010fa21cbd3a45189ab5f89b570d1434dce599b"
-        ),   
+        ),
+        
+        # New additions to the problem set in 2020.
+        
+        (
+        "cookie",
+        cookie_generator(seed),
+        "ef5d2cc98a988383fdd167ac0ab2305312133dd57e9045cebe"        
+        ),
+        (
+        "eliminate_neighbours",
+        eliminate_neighbours_generator(seed),
+        "37bb46ab8421843a4d535a796de605eed5138fa31033c42506"
+        ),
+        (
+        "counting_series",
+        counting_series_generator(seed),
+        "d7e9ef9de8cb71c901622aec367ff4b0eb96869cae7bbc8cd4"
+        ),
+        (
+        "is_zigzag",
+        is_zigzag_generator(seed),
+        "fe5e03401a32bc5ca989759708d10a7f9d2cbd9e4821566b91"        
+        ),
+        (
+        "next_zigzag",
+        next_zigzag_generator(seed),
+        "52d66db24fc831dd08657f36e2e7b49ab788e6c86e8a25d3c5"
+        ),
+        (
+        "md",
+        md_generator(seed),
+        "a1dcac70c093c0ba7fcfeae6d9d9655accb1cf871617f2a874"
+        ),
+        (
+        "wythoff_array",
+        wythoff_array_generator(seed),
+        "d9c276aee0a2914dc393b0fce677b859d3fd98e996a7bd924d"        
+        )
+         
 ]
 
 import os.path
