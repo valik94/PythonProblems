@@ -1,6 +1,6 @@
 # As an example, here is an implementation of
 # the first problem "Ryerson Letter Grade":
-
+#1
 def ryerson_letter_grade(n):
     if n < 50:
         return 'F'
@@ -27,8 +27,8 @@ def ryerson_letter_grade(n):
     elif n > 52 and n<=150:
         return 'D'
     elif n > 49 and n<=150:
-        return 'D-'
-
+        return 'D-'                                
+    
     tens = n // 10
     ones = n % 10
     if ones < 3:
@@ -39,6 +39,23 @@ def ryerson_letter_grade(n):
         adjust = ""
     return "DCB"[tens - 5] + adjust
 
-def riffle(items, out=True):
+#ryerson_letter_grade()
+
+#print(ryerson_letter_grade(150))
+
+#2 second problem - Ascending list
+
+def is_ascending(items):
+    if items==[]:
+        return True
     for i in items:
-        list_in=items[0:i+1]
+        if items==[i]:
+            return True
+        if items[i]>items[i+1]:
+            return True
+        else: 
+            return False
+
+is_ascending()
+#print(is_ascending([-5, 10, 99, 123456]))
+        
